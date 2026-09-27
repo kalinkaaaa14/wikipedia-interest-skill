@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const skillDir = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 if (!existsSync(join(skillDir, 'node_modules', 'vega-lite'))) {
-  console.log(JSON.stringify({ error: 'Dependencies are not installed.', fix: `Run: npm ci --prefix "${skillDir}"` }));
+  console.log(JSON.stringify({ error: 'Dependencies are not installed.', fix: `Run: npm ci --omit=dev --prefix "${skillDir}"` }));
   process.exit(2);
 }
 

@@ -8,7 +8,7 @@ Read this when the user asks how numbers are computed or how far to trust them. 
 - **Denominator:** daily human pageviews of the whole language edition (`/aggregate`), fetched for the same period.
 - **Period:** complete calendar months only, ending with the last complete month. The current partial month is never used.
 - **Topic → article:** Wikidata item sitelinks, so every language uses the article about the same concept. Views of redirect titles are not added.
-- **New articles:** months before the first full month with data are excluded. A partial first month would look like growth.
+- **New articles:** a first record later than the 8th day of its month means the article appeared mid-month; that month and earlier ones are excluded, since a partial first month would look like growth. A first record by the 8th counts the month as full, because the API omits zero-view days.
 
 ## Metrics (per edition × article)
 

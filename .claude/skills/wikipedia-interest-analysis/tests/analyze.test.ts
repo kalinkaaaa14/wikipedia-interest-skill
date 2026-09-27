@@ -164,3 +164,16 @@ test('buildFindings: the Highest score line carries the formula', () => {
   const weights = { growth: 0.6, size: 0.4 };
   assert.match(buildFindings([growing, declining], rankSeries([growing, declining], weights), weights).at(-1)!, /Highest score: a \(100\/100\)\. score = 100 × \(0\.6 × growth percentile/);
 });
+
+test('analyzeSeries: a first record on the 3rd keeps the month; on the 20th the article is new', () => {
+  const months = monthRange('2024-01', '2025-12');
+  const { days, article, edition } = syntheticDays(months, () => 20);
+  const fromThird = new Map([...article].filter(([day]) => day >= '2024-01-03')); // no views on Jan 1–2
+  const fromTwentieth = new Map([...article].filter(([day]) => day >= '2024-01-20')); // created on Jan 20
+  const existing = analyzeSeries({ lang: 'uk', title: 'T', topic: 'topic' }, fromThird, edition, months, days);
+  const created = analyzeSeries({ lang: 'uk', title: 'T', topic: 'topic' }, fromTwentieth, edition, months, days);
+  assert.equal(existing.metrics!.firstDataMonth, '2024-01');
+  assert.ok(!existing.reasons.some((reason) => reason.includes('created or renamed')));
+  assert.equal(created.metrics!.firstDataMonth, '2024-02');
+  assert.ok(created.reasons.some((reason) => reason.includes('created or renamed')));
+});

@@ -1,13 +1,14 @@
 import type { BasketMemberDaily } from '../../types/basket-member-daily.ts';
 import type { CombinedBasket } from '../../types/combined-basket.ts';
 import type { DailySeries } from '../../types/daily-series.ts';
+import { LATEST_FULL_MONTH_START_DAY } from './latest-full-month-start-day.ts';
 
 /**
  * Sum the daily views of basket members into one series. A member whose data starts more than a week
  * after the period start (created or renamed during it) is left out: its arrival would look like growth.
  */
 export function combineBasket(members: BasketMemberDaily[], periodStart: string): CombinedBasket {
-  const latestFirstDay = `${periodStart}-08`;
+  const latestFirstDay = `${periodStart}-${String(LATEST_FULL_MONTH_START_DAY).padStart(2, '0')}`;
   const daily: DailySeries = new Map();
   const usedIndexes: number[] = [];
   const excluded: string[] = [];

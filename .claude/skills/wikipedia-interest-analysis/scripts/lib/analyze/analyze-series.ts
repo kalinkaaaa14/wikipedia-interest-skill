@@ -10,6 +10,7 @@ import { theilSenSlope } from '../stats/theil-sen-slope.ts';
 import { classifyDirection } from './classify-direction.ts';
 import { despike } from './despike.ts';
 import { detectLevelShift } from './detect-level-shift.ts';
+import { LATEST_FULL_MONTH_START_DAY } from './latest-full-month-start-day.ts';
 import { seasonalPeakMonth } from './seasonal-peak-month.ts';
 import { weekdayRatio } from './weekday-ratio.ts';
 
@@ -86,7 +87,8 @@ export function analyzeSeries(spec: SeriesSpec, daily: DailySeries | null, editi
   });
 
   // A partially covered first month would look like growth, so it is treated as missing.
-  const firstFullMonth = firstDay.endsWith('-01') ? firstDay.slice(0, 7) : addMonths(firstDay.slice(0, 7), 1);
+  const firstMonth = firstDay.slice(0, 7);
+  const firstFullMonth = Number(firstDay.slice(8, 10)) <= LATEST_FULL_MONTH_START_DAY ? firstMonth : addMonths(firstMonth, 1);
   const monthly: MonthPoint[] = months.map((month) => {
     const editionViews = editionMonthly.get(month) ?? 0;
 
