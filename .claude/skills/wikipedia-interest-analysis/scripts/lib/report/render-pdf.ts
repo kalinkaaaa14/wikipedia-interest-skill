@@ -4,6 +4,7 @@ import type { AnalysisResult } from '../../types/analysis-result.ts';
 import type { ReportText } from '../../types/report-text.ts';
 import type { SeriesResult } from '../../types/series-result.ts';
 import { formatSignedPercent } from '../analyze/format-signed-percent.ts';
+import { describeBasketForReport } from './describe-basket-for-report.ts';
 
 const require = createRequire(import.meta.url);
 // pdfmake 0.2 server-side printer is CommonJS. Roboto from its bundled VFS covers Latin Extended + Cyrillic.
@@ -49,6 +50,7 @@ function tableRow(series: SeriesResult): string[] {
 
 function buildDocument(result: AnalysisResult, svg: string, text: ReportText, compact: boolean) {
   const rows = result.series.slice(0, 10).map(tableRow);
+  const baskets = result.series.filter((series) => series.basket?.members.length).map(describeBasketForReport);
   const reasons = result.series.flatMap((series) => series.reasons.map((reason) => `${series.label}: ${reason}`)).slice(0, compact ? 3 : 4);
 
   return {
@@ -77,6 +79,7 @@ function buildDocument(result: AnalysisResult, svg: string, text: ReportText, co
         layout: 'lightHorizontalLines',
       },
       { text: "* Change in the share of the edition's human views, last 12 vs previous 12 months, spike days replaced by the local median.", style: 'muted', margin: [0, 2, 0, 0] },
+      ...(baskets.length ? [{ text: 'Subtopics', style: 'h2' }, { ul: baskets }] : []),
       ...(result.ranking.length
         ? [{ text: 'Ranking (growth × size × confidence)', style: 'h2' }, { text: result.ranking.slice(0, 5).map((row, index) => `${index + 1}. ${row.label} — ${row.score}/100`).join('    ') }]
         : []),

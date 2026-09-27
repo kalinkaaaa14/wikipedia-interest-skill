@@ -80,7 +80,7 @@ CLAUDE.md                     code style rules, enforced by ESLint
 - **End to end on real data:** all three example questions from the task, PDFs checked visually (one page, Cyrillic and diacritics).
 - **Refactoring safety:** outputs before and after the code rewrite are byte-identical (21 checks).
 - **Strict typecheck and ESLint.**
-- **Evals on a weak model:** 12 scenarios × 3 repeats (`node evals/run.ts --model haiku --repeat 3`), each run in an empty temporary project with only the skill installed and no developer memory. Transcripts are graded against the expectations in `evals/evals.json` by automatic checks plus reading every answer.
+- **Evals on a weak model:** 15 scenarios × 3 repeats (`node evals/run.ts --model haiku --repeat 3`), each run in an empty temporary project with only the skill installed and no developer memory. Transcripts are graded against the expectations in `evals/evals.json` by automatic checks plus reading every answer.
 
 | Scenario | Result (Claude Haiku 4.5) |
 |---|---|
@@ -90,6 +90,10 @@ CLAUDE.md                     code style rules, enforced by ESLint
 | Astronomy (uk; uk + pl) | basket → one confirmation → analysis: 6/6 |
 | Learning English, 5 languages + report | basket of learning subtopics → analysis: 3/3; PDF: 2/3 |
 | Follow-up ("add languages, 3 years") | re-runs with the new settings: 3/3 |
+| Field not in the examples (machine learning, pl) | recognized from Wikidata → one confirmation → basket analysis: 3/3 |
+| Two topics (astronomy vs biology, uk) | both baskets in one run, recommendation by size and trend: 3/3; waited for confirmation: 0/3 |
+| Basket + PDF for the team (uk, pl) | PDF with the subtopic breakdown: 3/3; waited for confirmation: 1/3 |
+| Very small audience (cs, ~180 views/month) | says the data cannot support a confident conclusion: 3/3 |
 | "Last year", no languages named, Polish question | correct period, language and answer language: 9/9 |
 
 Remaining model errors (in roughly 15–20% of runs): guessing causes, naming a country instead of a language edition, occasional words from another language.
@@ -102,7 +106,7 @@ Remaining model errors (in roughly 15–20% of runs): guessing causes, naming a 
 - Part of the decline of reference articles comes from search engines and AI assistants answering directly.
 - Views of redirects are not counted; bots that slip into "user" traffic show up as spikes.
 - Thresholds (spikes, 10%, p < 0.1, audience size) are reasoned judgment calls, not calibrated values.
-- The PDF is in English except for the takeaway.
+- The PDF is in English except for the takeaway; it lists growing and declining subtopics for every basket.
 
 ## Development
 
