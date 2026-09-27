@@ -108,6 +108,33 @@ Remaining model errors (in roughly 15–20% of runs): guessing causes, naming a 
 - Thresholds (spikes, 10%, p < 0.1, audience size) are reasoned judgment calls, not calibrated values.
 - The PDF is in English except for the takeaway; it lists growing and declining subtopics for every basket.
 
+## Next steps
+
+Every improvement follows the same loop: a new question type or a model error becomes an eval scenario, it runs 3 times on a weak model, the fix goes into the code output (ready-made findings, hints) before SKILL.md text, and the scenario is re-run.
+
+**1. Answer quality (next)**
+- **Confirmation for multi-topic questions and reports.** The agent confirms a basket reliably for one topic (9/9) but skips it when comparing topics or asking for a report (0/3, 1/3). Allowing the skip in the hint made it skip everywhere, so the fix has to separate these cases in code, not in wording.
+- **Control group:** compare a topic with a basket of similar articles in the same edition, to tell "all reference articles lose readers to AI search" from "interest in this topic is falling".
+- **Year-over-year vs trend disagreement** (French "Marie Curie": −0.6% YoY, −15.9%/year trend): report "no reliable direction" with the reason instead of "flat".
+- **Localized PDF** (Ukrainian and English) and report templates for different questions: topic, language, topic comparison.
+- **Redirects and renames:** add views of old titles and detect renames automatically instead of only warning about level shifts.
+- **Remaining model errors:** guessed causes, country instead of language edition, words from another language.
+
+**2. Trust in the numbers**
+- Sensitivity analysis of the thresholds (spikes, 10%, p < 0.1, audience size): check that conclusions do not flip when a threshold moves.
+- Cross-check with pageviews.wmcloud.org; recorded API responses for offline end-to-end tests.
+- Automatic grading of eval transcripts and CI: tests, typecheck, lint and a nightly eval run with quality thresholds.
+
+**3. Harder questions**
+- Discovery without a hypothesis: which topics in a field grow fastest (top endpoint, Wikidata clusters).
+- Markets instead of languages: pageviews by country.
+- Custom periods (school year, last 6 months) with the same months compared year over year.
+- More signals: edits, clickstream, Google Trends, number of speakers and internet users, desktop vs mobile.
+
+**4. More data**
+- For thousands of articles, replace per-article API requests with the monthly pageview dumps loaded into DuckDB/Parquet: download once, then query any articles locally in seconds.
+- Precompute edition totals and common baskets; run batches and give the model only a compact summary.
+
 ## Development
 
 ```bash
