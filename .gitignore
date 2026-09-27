@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Results of analyze runs (reproducible from the skill)
+wiki-interest/
+
+# Early and superseded eval transcripts, kept locally only
+.claude/skills/wikipedia-interest-analysis/evals/runs-archive/
